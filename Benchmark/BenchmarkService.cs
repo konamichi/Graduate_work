@@ -1,19 +1,53 @@
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Engines;
+using Microsoft.Extensions.Configuration;
+using NewsReader.Data;
+using NewsReader.Models;
 using NewsReader.Services;
 
 namespace BenchmarkWebApp
 {
+    [SimpleJob(RunStrategy.Monitoring, iterationCount: 1, invocationCount: 1)]
     public class BenchmarkService
     {
         private readonly Service _service;
 
         public BenchmarkService()
         {
-            
+            var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .Build();
+
+            var dataContext = new DataContext(config);
+
+            _service = new Service(config, dataContext);
         }
 
         [Benchmark]
-        public void RunDownloadArticlesFromApi() => _service.DownloadArticlesFromApi("tesla", "2024-01-01", "technology");
+        public void RunLoadArticles()
+        {
+            var articles = new List<ApiArticleModel>();
+            for (int i = 0; i < 1000; i++)
+            {
+                articles.Add(new ApiArticleModel
+                {
+                    Source = new ApiSourceModel
+                    {
+                        Id = null,
+                        Name = "some source.com"
+                    },
+                    Author = "Julia",
+                    Title = "Breaking news",
+                    Description = "Not breaking news actually",
+                    Url = "http://panorama.ru",
+                    UrlToImage = null,
+                    PublishedAt = DateTime.Now,
+                    Content = "Kolobok povesilsya"
+                });
+            }
+            
+            _service.LoadArticles(articles, "business");
+        }
         
         [Benchmark]
         public void RunGetArticles() => _service.GetArticles();
@@ -25,10 +59,10 @@ namespace BenchmarkWebApp
         public void RunPublishArticle() => _service.PublishArticle(1, "тест", "тест", "тест", "тест", "01.01.0001 00:00:00", "тест");
 
         [Benchmark]
-        public void RunDeleteArticle() => _service.DeleteArticle(1);
+        public void RunDeleteArticle() => _service.DeleteArticle(151123);
 
         [Benchmark]
-        public void RunEditArticle() => _service.EditArticle(1, 1, "тест", "тест", "тест", "тест", "01.01.0001 00:00:00", "тест");
+        public void RunEditArticle() => _service.EditArticle(152124, 1, "тест", "тест", "тест", "тест", "01.01.0001 00:00:00", "тест");
 
         [Benchmark]
         public void RunGetCategoryByName() => _service.GetCategory("business");

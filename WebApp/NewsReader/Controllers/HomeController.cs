@@ -32,7 +32,9 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Download(string q, string date, string category)
     {
-        _newsReader.DownloadArticlesFromApi(q, date, category);
+        var articles = _newsReader.DownloadArticlesFromApi(q, date, category);
+        if (articles != null)
+            _newsReader.LoadArticles(articles, category);
 
         return RedirectToAction("Index");
     }

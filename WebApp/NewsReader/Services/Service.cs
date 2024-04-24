@@ -16,7 +16,29 @@ namespace NewsReader.Services
             _dataContext = dataContext;
         }
 
-        public void DownloadArticlesFromApi(string q, string from, string category)
+        public void LoadArticles(List<ApiArticleModel> articles, string category)
+        {
+            foreach (var article in articles)
+            {
+                var existCategory = GetCategory(category);
+
+                var articleToDb = new Article
+                {
+                    CategoryId = existCategory.Id,
+                    Name = article.Source.Name,
+                    Author = article.Author,
+                    Title = article.Title,
+                    Description = article.Description,
+                    PublishedAt = article.PublishedAt.ToString(),
+                    Content = article.Content
+                };
+
+                _dataContext.Articles.Add(articleToDb);
+                _dataContext.SaveChanges();
+            }
+        }
+
+        public List<ApiArticleModel>? DownloadArticlesFromApi(string q, string from, string category)
         {   
             var key = _config["APIKey"];
 
@@ -27,25 +49,10 @@ namespace NewsReader.Services
             {
                 string responseBody = response.Content.ReadAsStringAsync().Result;
                 var deserializedArticles = JsonConvert.DeserializeObject<List<ApiArticleModel>>(responseBody);
-                foreach (var deserializedArticle in deserializedArticles)
-                {
-                    var existCategory = GetCategory(category);
-
-                    var articleToDb = new Article
-                    {
-                        CategoryId = existCategory.Id,
-                        Name = deserializedArticle.Source.Name,
-                        Author = deserializedArticle.Author,
-                        Title = deserializedArticle.Title,
-                        Description = deserializedArticle.Description,
-                        PublishedAt = deserializedArticle.PublishedAt.ToString(),
-                        Content = deserializedArticle.Content
-                    };
-
-                    _dataContext.Articles.Add(articleToDb);
-                    _dataContext.SaveChanges();
-                }
+                return deserializedArticles;
             }
+
+            return null;
         }
 
         public ArticleCategoryViewModel GetArticles() 

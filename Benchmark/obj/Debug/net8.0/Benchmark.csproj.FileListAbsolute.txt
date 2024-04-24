@@ -107,3 +107,4 @@ C:\Users\anton\Diplom\Benchmark\obj\Debug\net8.0\refint\Benchmark.dll
 C:\Users\anton\Diplom\Benchmark\obj\Debug\net8.0\Benchmark.pdb
 C:\Users\anton\Diplom\Benchmark\obj\Debug\net8.0\Benchmark.genruntimeconfig.cache
 C:\Users\anton\Diplom\Benchmark\obj\Debug\net8.0\ref\Benchmark.dll
+C:\Users\anton\Diplom\Benchmark\obj\Debug\net8.0\Benchmark.sourcelink.json

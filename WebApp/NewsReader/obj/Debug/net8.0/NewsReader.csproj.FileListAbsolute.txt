@@ -115,3 +115,4 @@ C:\Users\anton\Diplom\WebApp\NewsReader\obj\Debug\net8.0\refint\NewsReader.dll
 C:\Users\anton\Diplom\WebApp\NewsReader\obj\Debug\net8.0\NewsReader.pdb
 C:\Users\anton\Diplom\WebApp\NewsReader\obj\Debug\net8.0\NewsReader.genruntimeconfig.cache
 C:\Users\anton\Diplom\WebApp\NewsReader\obj\Debug\net8.0\ref\NewsReader.dll
+C:\Users\anton\Diplom\WebApp\NewsReader\obj\Debug\net8.0\NewsReader.sourcelink.json
