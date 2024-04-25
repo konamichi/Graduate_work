@@ -1,3 +1,3 @@
 ﻿function continueReading(articleUrl) {
-    window.location.href = articleUrl;
+    window.open(articleUrl, '_blank');
 }
