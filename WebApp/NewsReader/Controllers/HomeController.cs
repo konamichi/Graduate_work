@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using NewsReader.ViewModels;
 using NewsReader.Services;
+using System.Text.RegularExpressions;
 
 namespace NewsReader.Controllers;
 
@@ -30,9 +31,9 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult Download(string q, string date, string category)
+    public IActionResult Download(string q, string category)
     {
-        var articles = _newsReader.DownloadArticlesFromApi(q, date, category);
+        var articles = _newsReader.DownloadArticlesFromApi(q);
         if (articles != null)
             _newsReader.LoadArticles(articles, category);
 
@@ -40,19 +41,19 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult CreateArticle(string category, string name, string author, string title, string description, string publishedAt, string content)
+    public IActionResult CreateArticle(string category, string name, string author, string title, string description, string publishedAt, string content, string? url, string? urlToImage)
     {
         var existCategory = _newsReader.GetCategory(category);
 
-        _newsReader.PublishArticle(existCategory.Id, name, author, title, description, publishedAt, content);
+        _newsReader.PublishArticle(existCategory.Id, name, author, title, description, publishedAt, content, url, urlToImage);
 
         return RedirectToAction("Index");
     }
 
     [HttpGet]
-    public IActionResult ChangeArticle(int id, int categoryId, string name, string author, string title, string description, string publishedAt, string content)
+    public IActionResult ChangeArticle(int id, int categoryId, string name, string author, string title, string description, string publishedAt, string content, string? url, string? urlToImage)
     {
-        _newsReader.EditArticle(id, categoryId, name, author, title, description, publishedAt, content);
+        _newsReader.EditArticle(id, categoryId, name, author, title, description, publishedAt, content, url, urlToImage);
 
         return RedirectToAction("Index");
     }

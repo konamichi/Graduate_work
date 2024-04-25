@@ -26,12 +26,15 @@ namespace BenchmarkWebApp
         [Benchmark]
         public void RunLoadArticles()
         {
-            var articles = new List<ApiArticleModel>();
+            var news = new NewsApiModel();
+            news.Status = "ok";
+            news.TotalResults = 1000;
+
             for (int i = 0; i < 1000; i++)
             {
-                articles.Add(new ApiArticleModel
+                news.Articles.Add(new ArticleModel
                 {
-                    Source = new ApiSourceModel
+                    Source = new SourceModel
                     {
                         Id = null,
                         Name = "some source.com"
@@ -46,7 +49,7 @@ namespace BenchmarkWebApp
                 });
             }
             
-            _service.LoadArticles(articles, "business");
+            _service.LoadArticles(news, "business");
         }
         
         [Benchmark]
@@ -56,13 +59,13 @@ namespace BenchmarkWebApp
         public void RunSearch() => _service.Search("тест");
         
         [Benchmark]
-        public void RunPublishArticle() => _service.PublishArticle(1, "тест", "тест", "тест", "тест", "01.01.0001 00:00:00", "тест");
+        public void RunPublishArticle() => _service.PublishArticle(1, "тест", "тест", "тест", "тест", "01.01.0001 00:00:00", "тест", "тест", "тест");
 
         [Benchmark]
         public void RunDeleteArticle() => _service.DeleteArticle(151123);
 
         [Benchmark]
-        public void RunEditArticle() => _service.EditArticle(152124, 1, "тест", "тест", "тест", "тест", "01.01.0001 00:00:00", "тест");
+        public void RunEditArticle() => _service.EditArticle(152124, 1, "тест", "тест", "тест", "тест", "01.01.0001 00:00:00", "тест", "тест", "тест");
 
         [Benchmark]
         public void RunGetCategoryByName() => _service.GetCategory("business");

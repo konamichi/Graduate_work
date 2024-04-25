@@ -37,15 +37,11 @@
                     <span class="article-desc">@article.Description</span>
                 </div>         
                 <hr>
-                @if (article.Content.Length > 50)
+                <div id="@("articleContent" + article.Id)" class="article-content">@article.Content</div>
+                @if (article.Url != null)
                 {
-                    <div id="@("articleContent" + article.Id)" class="article-trimmed-content">@article.Content</div>
-                    <div id="@("continueReading" + article.Id)" class="continue-reading" onclick="continueReading('@article.Id')">Продолжить чтение</div>
-                }
-                else
-                {
-                    <div id="@("articleContent" + article.Id)" class="article-content">@article.Content</div>
-                }                
+                    <div id="@("continueReading" + article.Id)" class="continue-reading" onclick="continueReading('@article.Url')">Продолжить чтение</div>     
+                }                         
             </div>
 
             <div class="modal fade" tabindex="-1" id="@("changeArticle" + article.Id)">
@@ -90,6 +86,14 @@
                                 <div class="form-group">
                                     <label for="content">Контент:</label>
                                     <input type="text" class="form-control" id="content" name="content" value="@article.Content" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="url">URL статьи:</label>
+                                    <input type="text" class="form-control" id="url" name="url" value="@article.Url">
+                                </div>
+                                <div class="form-group">
+                                    <label for="urlToImage">URL картинки:</label>
+                                    <input type="text" class="form-control" id="urlToImage" name="urlToImage" value="@article.UrlToImage">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -150,6 +154,14 @@
                         <label for="content">Контент:</label>
                         <input type="text" class="form-control" id="content" name="content" required>
                     </div>
+                    <div class="form-group">
+                        <label for="url">URL статьи:</label>
+                        <input type="text" class="form-control" id="url" name="url">
+                    </div>
+                    <div class="form-group">
+                        <label for="urlToImage">URL картинки:</label>
+                        <input type="text" class="form-control" id="urlToImage" name="urlToImage">
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                         <button type="submit" class="btn btn-primary">Создать</button>
@@ -172,10 +184,6 @@
                     <div class="form-group">
                         <label for="q">Ключевая фраза:</label>
                         <input type="text" class="form-control" id="q" name="q" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="date">Дата:</label>
-                        <input type="text" class="form-control" id="date" name="date" required>
                     </div>
                     <div class="form-group">
                         <label for="category">Категория:</label>

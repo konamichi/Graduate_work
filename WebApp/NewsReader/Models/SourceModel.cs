@@ -1,8 +1,8 @@
 namespace NewsReader.Models 
 {
-    public class ApiSourceModel
+    public class SourceModel
     {
         public string? Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

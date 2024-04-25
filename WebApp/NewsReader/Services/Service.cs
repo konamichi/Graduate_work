@@ -16,9 +16,9 @@ namespace NewsReader.Services
             _dataContext = dataContext;
         }
 
-        public void LoadArticles(List<ApiArticleModel> articles, string category)
+        public void LoadArticles(NewsApiModel newsModel, string category)
         {
-            foreach (var article in articles)
+            foreach (var article in newsModel.Articles)
             {
                 var existCategory = GetCategory(category);
 
@@ -30,7 +30,9 @@ namespace NewsReader.Services
                     Title = article.Title,
                     Description = article.Description,
                     PublishedAt = article.PublishedAt.ToString(),
-                    Content = article.Content
+                    Content = article.Content,
+                    Url = article.Url,
+                    UrlToImage = article.UrlToImage
                 };
 
                 _dataContext.Articles.Add(articleToDb);
@@ -38,18 +40,22 @@ namespace NewsReader.Services
             }
         }
 
-        public List<ApiArticleModel>? DownloadArticlesFromApi(string q, string from, string category)
+        public NewsApiModel? DownloadArticlesFromApi(string q)
         {   
             var key = _config["APIKey"];
 
             using var httpClient = new HttpClient();
-            var response = httpClient.GetAsync($"https://newsapi.org/v2/everything?q={q}&from={from}&sortBy=publishedAt&apiKey={key}").Result;
+            httpClient.DefaultRequestHeaders.Add("user-agent", "News-API-csharp/0.1");
+            httpClient.DefaultRequestHeaders.Add("x-api-key", key);
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"https://newsapi.org/v2/everything?q={q}&apiKey={key}");
+            var response = httpClient.SendAsync(httpRequest).Result;
 
             if (response.IsSuccessStatusCode)
             {
                 string responseBody = response.Content.ReadAsStringAsync().Result;
-                var deserializedArticles = JsonConvert.DeserializeObject<List<ApiArticleModel>>(responseBody);
-                return deserializedArticles;
+                var deserializedNews = JsonConvert.DeserializeObject<NewsApiModel>(responseBody);
+                return deserializedNews;
             }
 
             return null;
@@ -86,7 +92,9 @@ namespace NewsReader.Services
                         Title = article.Title,
                         Description = article.Description,
                         PublishedAt = article.PublishedAt,
-                        Content = article.Content
+                        Content = article.Content,
+                        Url = article.Url,
+                        UrlToImage = article.UrlToImage
                     });
                 }
             }
@@ -115,7 +123,8 @@ namespace NewsReader.Services
                 if (article.Title.Contains(searchTerm) 
                 || article.Description.Contains(searchTerm) 
                 || article.Author.Contains(searchTerm)
-                || article.Content.Contains(searchTerm))
+                || article.Content.Contains(searchTerm)
+                || article.Name.Contains(searchTerm))
                 {
                     result.Articles.Add(article);
                 }
@@ -124,7 +133,7 @@ namespace NewsReader.Services
             return result;
         }
 
-        public void PublishArticle(int categoryId, string name, string author, string title, string description, string publishedAt, string content)
+        public void PublishArticle(int categoryId, string name, string author, string title, string description, string publishedAt, string content, string? url, string? urlToImage)
         {
             var articleToDb = new Article
             {
@@ -134,7 +143,9 @@ namespace NewsReader.Services
                 Title = title,
                 Description = description,
                 PublishedAt = publishedAt,
-                Content = content
+                Content = content,
+                Url = url,
+                UrlToImage = urlToImage
             };
 
             _dataContext.Articles.Add(articleToDb);
@@ -149,7 +160,7 @@ namespace NewsReader.Services
             _dataContext.SaveChanges();      
         }
 
-        public void EditArticle(int id, int categoryId, string name, string author, string title, string description, string publishedAt, string content)
+        public void EditArticle(int id, int categoryId, string name, string author, string title, string description, string publishedAt, string content, string? url, string? urlToImage)
         {
             var existArticle = _dataContext.Articles.First(a => a.Id == id);
             existArticle.CategoryId = categoryId;
@@ -159,6 +170,8 @@ namespace NewsReader.Services
             existArticle.Description = description;
             existArticle.PublishedAt = publishedAt;
             existArticle.Content = content;
+            existArticle.Url = url;
+            existArticle.UrlToImage = urlToImage;
 
             _dataContext.SaveChanges();
         }
