@@ -1,11 +1,13 @@
 using NewsReader.Services;
 using NewsReader.Data;
+using NewsReader.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddTransient<Service>();
+builder.Services.AddTransient<NewsService>();
+builder.Services.AddTransient<NewsRepository>();
 
 builder.Services.AddDbContext<DataContext>();
 

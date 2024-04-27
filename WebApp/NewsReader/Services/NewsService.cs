@@ -1,44 +1,51 @@
 using NewsReader.Data;
 using NewsReader.Models;
+using NewsReader.Repositories;
 using NewsReader.ViewModels;
 using Newtonsoft.Json;
 
 namespace NewsReader.Services
 {
-    public class Service
+    public class NewsService
     {
         private readonly IConfiguration _config;
-        private readonly DataContext _dataContext;
+        private readonly NewsRepository _newsRepository;
 
-        public Service(IConfiguration config, DataContext dataContext)
+        public NewsService(IConfiguration config, NewsRepository newsRepository)
         {
             _config = config;
-            _dataContext = dataContext;
-        }
+            _newsRepository = newsRepository;
+        } 
 
         public void LoadArticles(NewsApiModel newsModel, string category)
         {
-            foreach (var article in newsModel.Articles)
-            {
-                var existCategory = GetCategory(category);
-
-                var articleToDb = new Article
-                {
-                    CategoryId = existCategory.Id,
-                    Name = article.Source.Name,
-                    Author = article.Author,
-                    Title = article.Title,
-                    Description = article.Description,
-                    PublishedAt = article.PublishedAt,
-                    Content = article.Content,
-                    Url = article.Url,
-                    UrlToImage = article.UrlToImage
-                };
-
-                _dataContext.Articles.Add(articleToDb);
-                _dataContext.SaveChanges();
-            }
+            _newsRepository.LoadArticles(newsModel, category);
         }
+
+        public void PublishArticle(int categoryId, string name, string author, string title, string description, DateTime publishedAt, string content, string? url, string? urlToImage)
+        {
+            _newsRepository.PublishArticle(categoryId, name, author, title, description, publishedAt, content, url, urlToImage);
+        }
+
+        public void EditArticle(int id, int categoryId, string name, string author, string title, string description, DateTime publishedAt, string content, string? url, string? urlToImage)
+        {
+            _newsRepository.EditArticle(id, categoryId, name, author, title, description, publishedAt, content, url, urlToImage);
+        }
+
+        public void DeleteArticle(int id)
+        {
+            _newsRepository.DeleteArticle(id);
+        }
+
+        public Category GetCategory(string name)
+        {
+            return _newsRepository.GetCategory(name);
+        }
+
+        public Category GetCategory(int id)
+        {
+            return _newsRepository.GetCategory(id);
+        } 
 
         public NewsApiModel? DownloadArticlesFromApi(string q)
         {   
@@ -61,7 +68,7 @@ namespace NewsReader.Services
             return null;
         }
 
-        public ArticleCategoryViewModel GetArticlesWithCategories() 
+        public ArticleCategoryViewModel GetArticlesWithCategoriesModel() 
         {
             var model = new ArticleCategoryViewModel
             {
@@ -69,8 +76,8 @@ namespace NewsReader.Services
                 Categories = new List<CategoryViewModel>()
             };
 
-            var articlesFromDb = _dataContext.Articles.ToList();
-            var categories = _dataContext.Categories.ToList();
+            var articlesFromDb = _newsRepository.GetAllArticles();
+            var categories = _newsRepository.GetAllCategories();
 
             foreach (var category in categories)
             {
@@ -112,7 +119,7 @@ namespace NewsReader.Services
                 Categories = new List<CategoryViewModel>()
             };
 
-            var articles = GetArticlesWithCategories();
+            var articles = GetArticlesWithCategoriesModel();
 
             foreach (var category in articles.Categories)
             {
@@ -135,63 +142,6 @@ namespace NewsReader.Services
             }
 
             return result;
-        }
-
-        public void PublishArticle(int categoryId, string name, string author, string title, string description, DateTime publishedAt, string content, string? url, string? urlToImage)
-        {
-            var articleToDb = new Article
-            {
-                CategoryId = categoryId,
-                Name = name,
-                Author = author,
-                Title = title,
-                Description = description,
-                PublishedAt = publishedAt.ToUniversalTime(),
-                Content = content,
-                Url = url,
-                UrlToImage = urlToImage
-            };
-
-            _dataContext.Articles.Add(articleToDb);
-            _dataContext.SaveChanges();
-        }
-
-        public void DeleteArticle(int id)
-        {
-            var existArticle = _dataContext.Articles.First(a => a.Id == id);
-
-            _dataContext.Articles.Remove(existArticle);
-            _dataContext.SaveChanges();      
-        }
-
-        public void EditArticle(int id, int categoryId, string name, string author, string title, string description, DateTime publishedAt, string content, string? url, string? urlToImage)
-        {
-            var existArticle = _dataContext.Articles.First(a => a.Id == id);
-            existArticle.CategoryId = categoryId;
-            existArticle.Name = name;
-            existArticle.Author = author;
-            existArticle.Title = title;
-            existArticle.Description = description;
-            existArticle.PublishedAt = publishedAt.ToUniversalTime();
-            existArticle.Content = content;
-            existArticle.Url = url;
-            existArticle.UrlToImage = urlToImage;
-
-            _dataContext.SaveChanges();
-        }
-
-        public Category GetCategory(string name) 
-        {
-            var existCategory = _dataContext.Categories.First(c => c.CategoryName == name);
-
-            return existCategory;
-        }
-
-        public Category GetCategory(int id)
-        {
-            var existCategory = _dataContext.Categories.First(c => c.Id == id);
-
-            return existCategory;
         }
     }
 }

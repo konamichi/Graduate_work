@@ -3,6 +3,7 @@ using BenchmarkDotNet.Engines;
 using Microsoft.Extensions.Configuration;
 using NewsReader.Data;
 using NewsReader.Models;
+using NewsReader.Repositories;
 using NewsReader.Services;
 
 namespace BenchmarkWebApp
@@ -10,7 +11,9 @@ namespace BenchmarkWebApp
     [SimpleJob(RunStrategy.Monitoring, iterationCount: 1, invocationCount: 1)]
     public class BenchmarkService
     {
-        private readonly Service _service;
+        private readonly NewsService _service;
+
+        private readonly NewsRepository _repository;
 
         public BenchmarkService()
         {
@@ -20,7 +23,8 @@ namespace BenchmarkWebApp
 
             var dataContext = new DataContext(config);
 
-            _service = new Service(config, dataContext);
+            _repository = new NewsRepository(dataContext);
+            _service = new NewsService(config, _repository);
         }
 
         [Benchmark]
@@ -54,9 +58,15 @@ namespace BenchmarkWebApp
             
             _service.LoadArticles(news, "business");
         }
+
+        [Benchmark]
+        public void RunGetAllArticles() => _repository.GetAllArticles();
         
         [Benchmark]
-        public void RunGetArticles() => _service.GetArticlesWithCategories();
+        public void RunGetAllCategories() => _repository.GetAllCategories();
+        
+        [Benchmark]
+        public void RunGetArticlesWithCategoriesModel() => _service.GetArticlesWithCategoriesModel();
         
         [Benchmark]
         public void RunSearch() => _service.Search("тест");
@@ -65,10 +75,10 @@ namespace BenchmarkWebApp
         public void RunPublishArticle() => _service.PublishArticle(1, "тест", "тест", "тест", "тест", DateTime.Now, "тест", "тест", "тест");
 
         [Benchmark]
-        public void RunDeleteArticle() => _service.DeleteArticle(156130);
+        public void RunDeleteArticle() => _service.DeleteArticle(158134);
 
         [Benchmark]
-        public void RunEditArticle() => _service.EditArticle(156128, 1, "тест", "тест", "тест", "тест", DateTime.Now, "тест", "тест", "тест");
+        public void RunEditArticle() => _service.EditArticle(157133, 1, "тест", "тест", "тест", "тест", DateTime.Now, "тест", "тест", "тест");
 
         [Benchmark]
         public void RunGetCategoryByName() => _service.GetCategory("business");

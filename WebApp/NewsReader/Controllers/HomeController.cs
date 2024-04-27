@@ -10,9 +10,9 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    private readonly Service _newsReader;
+    private readonly NewsService _newsReader;
 
-    public HomeController(ILogger<HomeController> logger, Service newsReader)
+    public HomeController(ILogger<HomeController> logger, NewsService newsReader)
     {
         _logger = logger;
         _newsReader = newsReader;
@@ -23,7 +23,7 @@ public class HomeController : Controller
         var articles = new ArticleCategoryViewModel();  
 
         if (string.IsNullOrEmpty(searchTerm))
-            articles = _newsReader.GetArticlesWithCategories();
+            articles = _newsReader.GetArticlesWithCategoriesModel();
         else
             articles = _newsReader.Search(searchTerm);
 
