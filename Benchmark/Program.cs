@@ -10,6 +10,7 @@ class Program
         var summary = BenchmarkRunner.Run<BenchmarkService>();
 
         //var service = new BenchmarkService();
+        //service.RunLoadArticles();
         //service.RunEditArticle();
         //service.RunDeleteArticle();
     }

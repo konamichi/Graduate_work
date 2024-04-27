@@ -41,7 +41,7 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult CreateArticle(string category, string name, string author, string title, string description, string publishedAt, string content, string? url, string? urlToImage)
+    public IActionResult CreateArticle(string category, string name, string author, string title, string description, DateTime publishedAt, string content, string? url, string? urlToImage)
     {
         var existCategory = _newsReader.GetCategory(category);
 
@@ -51,7 +51,7 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public IActionResult ChangeArticle(int id, int categoryId, string name, string author, string title, string description, string publishedAt, string content, string? url, string? urlToImage)
+    public IActionResult ChangeArticle(int id, int categoryId, string name, string author, string title, string description, DateTime publishedAt, string content, string? url, string? urlToImage)
     {
         _newsReader.EditArticle(id, categoryId, name, author, title, description, publishedAt, content, url, urlToImage);
 

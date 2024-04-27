@@ -29,7 +29,8 @@ namespace BenchmarkWebApp
             var news = new NewsApiModel
             {
                 Status = "ok",
-                TotalResults = 1000
+                TotalResults = 1000,
+                Articles = new List<ArticleModel>()
             };
 
             for (int i = 0; i < 1000; i++)
@@ -46,7 +47,7 @@ namespace BenchmarkWebApp
                     Description = "Not breaking news actually",
                     Url = "http://panorama.ru",
                     UrlToImage = null,
-                    PublishedAt = DateTime.Now,
+                    PublishedAt = DateTime.Now.ToUniversalTime(),
                     Content = "Kolobok povesilsya"
                 });
             }
@@ -61,13 +62,13 @@ namespace BenchmarkWebApp
         public void RunSearch() => _service.Search("тест");
         
         [Benchmark]
-        public void RunPublishArticle() => _service.PublishArticle(1, "тест", "тест", "тест", "тест", "01.01.0001 00:00:00", "тест", "тест", "тест");
+        public void RunPublishArticle() => _service.PublishArticle(1, "тест", "тест", "тест", "тест", DateTime.Now, "тест", "тест", "тест");
 
         [Benchmark]
-        public void RunDeleteArticle() => _service.DeleteArticle(151123);
+        public void RunDeleteArticle() => _service.DeleteArticle(156130);
 
         [Benchmark]
-        public void RunEditArticle() => _service.EditArticle(152124, 1, "тест", "тест", "тест", "тест", "01.01.0001 00:00:00", "тест", "тест", "тест");
+        public void RunEditArticle() => _service.EditArticle(156128, 1, "тест", "тест", "тест", "тест", DateTime.Now, "тест", "тест", "тест");
 
         [Benchmark]
         public void RunGetCategoryByName() => _service.GetCategory("business");

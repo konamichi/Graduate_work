@@ -28,7 +28,7 @@
 <div class="articles">
     @if (Model.Articles != null && Model.Articles.Count > 0)
     {
-        foreach (var article in Model.Articles.OrderByDescending(a => DateTime.Parse(a.PublishedAt)))
+        foreach (var article in Model.Articles.OrderByDescending(a => a.PublishedAt))
         {
             var category = Model.Categories.First(c => c.Id == article.CategoryId);
 
@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="publishedAt">Опубликовано:</label>
-                                    <input type="text" class="form-control" id="publishedAt" name="publishedAt" value="@article.PublishedAt" required>
+                                    <input type="date" class="form-control" id="publishedAt" name="publishedAt" value="@article.PublishedAt" required>
                                 </div>                      
                                 <div class="form-group">
                                     <label for="content">Контент:</label>
@@ -155,7 +155,7 @@
                     </div>
                     <div class="form-group">
                         <label for="publishedAt">Опубликовано:</label>
-                        <input type="text" class="form-control" id="publishedAt" name="publishedAt" required>
+                        <input type="date" class="form-control" id="publishedAt" name="publishedAt" required>
                     </div>                      
                     <div class="form-group">
                         <label for="content">Контент:</label>

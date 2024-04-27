@@ -29,7 +29,7 @@ namespace NewsReader.Services
                     Author = article.Author,
                     Title = article.Title,
                     Description = article.Description,
-                    PublishedAt = article.PublishedAt.ToString(),
+                    PublishedAt = article.PublishedAt,
                     Content = article.Content,
                     Url = article.Url,
                     UrlToImage = article.UrlToImage
@@ -137,7 +137,7 @@ namespace NewsReader.Services
             return result;
         }
 
-        public void PublishArticle(int categoryId, string name, string author, string title, string description, string publishedAt, string content, string? url, string? urlToImage)
+        public void PublishArticle(int categoryId, string name, string author, string title, string description, DateTime publishedAt, string content, string? url, string? urlToImage)
         {
             var articleToDb = new Article
             {
@@ -146,7 +146,7 @@ namespace NewsReader.Services
                 Author = author,
                 Title = title,
                 Description = description,
-                PublishedAt = publishedAt,
+                PublishedAt = publishedAt.ToUniversalTime(),
                 Content = content,
                 Url = url,
                 UrlToImage = urlToImage
@@ -164,7 +164,7 @@ namespace NewsReader.Services
             _dataContext.SaveChanges();      
         }
 
-        public void EditArticle(int id, int categoryId, string name, string author, string title, string description, string publishedAt, string content, string? url, string? urlToImage)
+        public void EditArticle(int id, int categoryId, string name, string author, string title, string description, DateTime publishedAt, string content, string? url, string? urlToImage)
         {
             var existArticle = _dataContext.Articles.First(a => a.Id == id);
             existArticle.CategoryId = categoryId;
@@ -172,7 +172,7 @@ namespace NewsReader.Services
             existArticle.Author = author;
             existArticle.Title = title;
             existArticle.Description = description;
-            existArticle.PublishedAt = publishedAt;
+            existArticle.PublishedAt = publishedAt.ToUniversalTime();
             existArticle.Content = content;
             existArticle.Url = url;
             existArticle.UrlToImage = urlToImage;
