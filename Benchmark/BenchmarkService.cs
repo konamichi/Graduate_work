@@ -26,9 +26,11 @@ namespace BenchmarkWebApp
         [Benchmark]
         public void RunLoadArticles()
         {
-            var news = new NewsApiModel();
-            news.Status = "ok";
-            news.TotalResults = 1000;
+            var news = new NewsApiModel
+            {
+                Status = "ok",
+                TotalResults = 1000
+            };
 
             for (int i = 0; i < 1000; i++)
             {
@@ -53,7 +55,7 @@ namespace BenchmarkWebApp
         }
         
         [Benchmark]
-        public void RunGetArticles() => _service.GetArticles();
+        public void RunGetArticles() => _service.GetArticlesWithCategories();
         
         [Benchmark]
         public void RunSearch() => _service.Search("тест");

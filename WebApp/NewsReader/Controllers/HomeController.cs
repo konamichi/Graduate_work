@@ -23,7 +23,7 @@ public class HomeController : Controller
         var articles = new ArticleCategoryViewModel();  
 
         if (string.IsNullOrEmpty(searchTerm))
-            articles = _newsReader.GetArticles();
+            articles = _newsReader.GetArticlesWithCategories();
         else
             articles = _newsReader.Search(searchTerm);
 
@@ -54,6 +54,14 @@ public class HomeController : Controller
     public IActionResult ChangeArticle(int id, int categoryId, string name, string author, string title, string description, string publishedAt, string content, string? url, string? urlToImage)
     {
         _newsReader.EditArticle(id, categoryId, name, author, title, description, publishedAt, content, url, urlToImage);
+
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        _newsReader.DeleteArticle(id);
 
         return RedirectToAction("Index");
     }

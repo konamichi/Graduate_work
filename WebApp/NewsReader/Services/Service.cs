@@ -61,11 +61,13 @@ namespace NewsReader.Services
             return null;
         }
 
-        public ArticleCategoryViewModel GetArticles() 
+        public ArticleCategoryViewModel GetArticlesWithCategories() 
         {
-            var model = new ArticleCategoryViewModel();
-            model.Articles = new List<ArticleViewModel>();
-            model.Categories = new List<CategoryViewModel>();
+            var model = new ArticleCategoryViewModel
+            {
+                Articles = new List<ArticleViewModel>(),
+                Categories = new List<CategoryViewModel>()
+            };
 
             var articlesFromDb = _dataContext.Articles.ToList();
             var categories = _dataContext.Categories.ToList();
@@ -104,11 +106,13 @@ namespace NewsReader.Services
 
         public ArticleCategoryViewModel Search(string searchTerm)
         {
-            var result = new ArticleCategoryViewModel();
-            result.Articles = new List<ArticleViewModel>();
-            result.Categories = new List<CategoryViewModel>();
+            var result = new ArticleCategoryViewModel
+            {
+                Articles = new List<ArticleViewModel>(),
+                Categories = new List<CategoryViewModel>()
+            };
 
-            var articles = GetArticles();
+            var articles = GetArticlesWithCategories();
 
             foreach (var category in articles.Categories)
             {
@@ -120,11 +124,11 @@ namespace NewsReader.Services
             }
             foreach (var article in articles.Articles)
             {
-                if (article.Title.Contains(searchTerm) 
-                || article.Description.Contains(searchTerm) 
-                || article.Author.Contains(searchTerm)
-                || article.Content.Contains(searchTerm)
-                || article.Name.Contains(searchTerm))
+                if ((article.Title != null && article.Title.Contains(searchTerm)) 
+                || (article.Description != null && article.Description.Contains(searchTerm)) 
+                || (article.Author != null && article.Author.Contains(searchTerm))
+                || (article.Content != null && article.Content.Contains(searchTerm))
+                || (article.Name != null && article.Name.Contains(searchTerm)))
                 {
                     result.Articles.Add(article);
                 }
