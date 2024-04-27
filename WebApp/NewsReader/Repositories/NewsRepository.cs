@@ -4,14 +4,9 @@ using NewsReader.Models;
 
 namespace NewsReader.Repositories
 {
-    public class NewsRepository
+    public class NewsRepository(DataContext dataContext)
     {
-        private readonly DataContext _dataContext;
-
-        public NewsRepository(DataContext dataContext)
-        {
-            _dataContext = dataContext;
-        }
+        private readonly DataContext _dataContext = dataContext;
 
         public List<Article> GetAllArticles()
         {
