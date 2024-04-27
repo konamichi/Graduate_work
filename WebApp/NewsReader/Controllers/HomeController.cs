@@ -2,7 +2,6 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using NewsReader.ViewModels;
 using NewsReader.Services;
-using System.Text.RegularExpressions;
 
 namespace NewsReader.Controllers;
 

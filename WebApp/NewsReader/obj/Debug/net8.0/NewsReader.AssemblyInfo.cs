@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NewsReader")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a80126babb8f7646ac60d34bb6333d353eca233c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cec5d97f1b12fbd1c7c5164c5a9fc2016184e37b")]
 [assembly: System.Reflection.AssemblyProductAttribute("NewsReader")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NewsReader")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

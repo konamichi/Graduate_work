@@ -1,12 +1,16 @@
-using Microsoft.EntityFrameworkCore;
 using NewsReader.Data;
 using NewsReader.Models;
 
 namespace NewsReader.Repositories
 {
-    public class NewsRepository(DataContext dataContext)
+    public class NewsRepository
     {
-        private readonly DataContext _dataContext = dataContext;
+        private readonly DataContext _dataContext;
+
+        public NewsRepository(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
 
         public List<Article> GetAllArticles()
         {
